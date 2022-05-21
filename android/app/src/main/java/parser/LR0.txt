@@ -1,0 +1,8 @@
+ARTV V1 V P PRO CONJ ARTN RP ADJ Noun 
+VS NS VP NP N S
+S -> VS | NS
+VS -> VP NP | VP NS
+NS -> NP NP | NP VP | NP VS | NP NS | NP
+VP -> ARTV V1 | V | V1 | V P | V1 P
+NP -> N | PRO | ARTN N | ARTN PRO | N CONJ N | PRO CONJ PRO | N CONJ PRO | PRO CONJ N | N ARTN N
+N -> N ADJ | Noun | PRO | RP | ADJ
