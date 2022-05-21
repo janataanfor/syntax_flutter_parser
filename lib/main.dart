@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
     String resultValue;
     try {
       final int result = await platform.invokeMethod('parseMyText');
-      resultValue = 'Parsing result: $result % .';
+      resultValue = 'Parsing result: ${result == 1 ? 'done' : 'error'} .';
     } on PlatformException catch (e) {
       resultValue = "Failed to get battery level: '${e.message}'.";
     }
