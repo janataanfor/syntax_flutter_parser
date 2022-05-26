@@ -259,8 +259,7 @@ public class AugmentedFirstAndFollow
                 pretty[i][j].addAll(arr[i-1][j-1]);
             }
         }
-        PrettyPrinter printer = new PrettyPrinter(System.out);
-        printer.convert(pretty);
+
         if(flag)
         {
             System.out.println("Not a LL(1) grammar :(");

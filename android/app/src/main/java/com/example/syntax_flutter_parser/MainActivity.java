@@ -1,22 +1,15 @@
 package com.example.syntax_flutter_parser;
 
-import android.os.Build;
-
 import io.flutter.embedding.android.FlutterActivity;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.MethodChannel;
@@ -35,11 +28,12 @@ public class MainActivity extends FlutterActivity {
                             // Note: this method is invoked on the main thread.
                             if (call.method.equals("parseMyText")) {
                                 int parseResult = 0;
+                                final String textToParse = call.argument("text");
 
-                                    parseResult = parseMyText();
+                                    parseResult = parseMyText(textToParse);
 
 
-                                if (parseResult != -1) {
+                                if (parseResult != 0) {
                                     result.success(parseResult);
                                 } else {
                                     result.error("UNAVAILABLE", "parsing not completed.", null);
@@ -51,7 +45,7 @@ public class MainActivity extends FlutterActivity {
                 );
     }
 
-    private int parseMyText(){
+    private int parseMyText(String textToParse){
 //        String txt = "ARTV V1 V P PRO CONJ ARTN RP ADJ Noun\n" +
 //                "VS NS VP NP N S\n" +
 //                "S -> VS | NS\n" +
@@ -60,8 +54,10 @@ public class MainActivity extends FlutterActivity {
 //                "VP -> ARTV V1 | V | V1 | V P | V1 P\n" +
 //                "NP -> N | PRO | ARTN N | ARTN PRO | N CONJ N | PRO CONJ PRO | N CONJ PRO | PRO CONJ N | N ARTN N\n" +
 //                "N -> N ADJ | Noun | PRO | RP | ADJ";
-        String txt = "هذا مثال على العربي\n"+
-                "سطر ثاني";
+//        String txt = "هذا مثال على العربي\n"+
+//                "سطر ثاني";
+
+        String txt = "ARTV V P PRO CONJ ADJ PREP DT_N N\nS VS NS VP NP Noun\nS -> VS | NS\nVS -> VP NP | VP NS\nNS -> NP NP | NP VP | NP VS | NP NS | NP\nVP -> ARTV V | V | V P\nNP -> Noun | PRO | PREP Noun | PREP PRO | Noun CONJ Noun | PRO CONJ PRO | Noun CONJ PRO | PRO CONJ Noun | Noun PREP Noun\nNoun -> Noun ADJ | N | PRO | ADJ | DT_N";
 
         FileOutputStream fos=null;
         try {
@@ -88,22 +84,33 @@ public class MainActivity extends FlutterActivity {
             e.printStackTrace();
         }
 
-        int batteryLevel = 1;
         System.out.println("befour instance");
-        LR1Parser obj3=new LR1Parser();//Create an instance of the desired parser-In this case LR1 type parser
+        LR1Parser P=new LR1Parser();//Create an instance of the desired parser-In this case LR1 type parser
         System.out.println("befour path");
-        obj3.read_grammar(getFilesDir()+"/testme.txt");
-        //Read the grammar file and
-        obj3.buildDFA(); //Build a dfa from the file
-        System.out.println(obj3.getParsingTable(false)?"Grammar is LR1 :)":"Grammar isn't LR1  :(");
-        // if false was specify in the parameter (getParsingTable) it will not print if true then it will print the parsing table
-        System.out.println(obj3.parse("Noun Noun V",false)?"Successfully parsed":"Parse Failure");
-        //System.out.println(obj3.states); //not needed
-        //obj3.print_transitions();
-        obj3.getParsingTable(true);
-        obj3.parse("particle Noun",true);
+        P.read_grammar(getFilesDir()+"/testme.txt");
 
-        return batteryLevel;
+//        parser.LR1Parser P=new parser.LR1Parser();//Create object of LR1Parser
+//        P.read_grammar("C:\\Users\\ACER\\Documents\\NetBeansProjects\\syntax parser\\src\\syntax\\parser\\LR0.txt");//Read the grammar file and
+        P.buildDFA();//Build a dfa from the file
+        P.getParsingTable();// do the parsing table
+
+
+        // valid example
+        int h= 0;
+        h=P.parse(textToParse);//the function will take as parameters input _toParse(string) and flag(array index)  and it return boolean
+        //after calling the function if h==-1 then the input is parsed successfully
+        System.out.println(h);
+//
+//        // invalid example
+//        int y=P.parse("V V");
+//        //after calling the function if y>-1 then  y contains the error index of the word
+//        System.out.println(y);
+//
+//        // another invalid example
+//        y=P.parse("V N PREP");
+//        System.out.println(y);
+
+        return h;
     }
 
 }

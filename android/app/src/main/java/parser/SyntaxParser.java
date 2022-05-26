@@ -15,21 +15,28 @@ public class SyntaxParser {
     /**
      * @param args the command line arguments
      */
+
   public static void main(String args[])
     {
+      parser.LR1Parser P=new parser.LR1Parser();//Create object of LR1Parser
+       P.read_grammar("C:\\Users\\ACER\\Documents\\NetBeansProjects\\syntax parser\\src\\syntax\\parser\\LR0.txt");//Read the grammar file and 
+        P.buildDFA();//Build a dfa from the file          
+        P.getParsingTable();// do the parsing table
        
-        LR1Parser obj3=new LR1Parser();//Create an instance of the desired parser-In this case LR1 type parser
-//        obj3.read_grammar("C:\\Users\\ACER\\Documents\\NetBeansProjects\\syntax parser\\src\\syntax\\parser\\LR0.txt");
-        obj3.read_grammar("/Users/oalshokri/StudioProjects/syntax_flutter_parser/android/app/src/main/java/parser/LR0.txt");
-        //Read the grammar file and
-        obj3.buildDFA(); //Build a dfa from the file       
-        System.out.println(obj3.getParsingTable(false)?"Grammar is LR1 :)":"Grammar isn't LR1  :(");
-        // if false was specify in the parameter (getParsingTable) it will not print if true then it will print the parsing table 
-        System.out.println(obj3.parse("Noun Noun V",false)?"Successfully parsed":"Parse Failure");
-        //System.out.println(obj3.states); //not needed 
-        //obj3.print_transitions();
-        obj3.getParsingTable(true);
-        obj3.parse("particle Noun",true);
-     }
-    
+        
+        // valid example
+        int h=P.parse("V DT_N PREP DT_N");//the function will take as parameters input _toParse(string) and flag(array index)  and it return boolean 
+        //after calling the function if h==-1 then the input is parsed successfully 
+        System.out.println(h);
+        
+        // invalid example
+        int y=P.parse("V V");
+        //after calling the function if y>-1 then  y contains the error index of the word 
+        System.out.println(y);
+        
+        // another invalid example
+         y=P.parse("V N PREP");
+        System.out.println(y);
+        
+}
 }

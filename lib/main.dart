@@ -39,8 +39,9 @@ class _MyHomePageState extends State<MyHomePage> {
     print('pressed');
     String resultValue;
     try {
-      final int result = await platform.invokeMethod('parseMyText');
-      resultValue = 'Parsing result: ${result == 1 ? 'done' : 'error'} .';
+      final int result = await platform
+          .invokeMethod('parseMyText', {'text': 'V DT_N PREP DT_N'});
+      resultValue = 'Parsing result: $result';
     } on PlatformException catch (e) {
       resultValue = "Failed to get parsing result: '${e.message}'.";
     }
@@ -70,7 +71,10 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _getBatteryLevel,
         tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.arrow_right_outlined,
+          size: 50,
+        ),
       ),
     );
   }
